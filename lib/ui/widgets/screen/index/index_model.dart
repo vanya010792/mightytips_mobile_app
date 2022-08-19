@@ -66,6 +66,7 @@ class IndexModel extends ChangeNotifier {
     for(var a = 0; a < leagueList.length; a++) {
       predictionList.addAll(leagueList[a]);
     }
+
     for(var b = 0; b < predictionList.length; b++) {
       if(predictionList[b].matchDate != 'Jan 01, 1970') {
         _predictionRowData.add(predictionList[b]);
