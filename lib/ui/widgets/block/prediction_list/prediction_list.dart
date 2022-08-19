@@ -8,13 +8,13 @@ class PredictionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<IndexModel>();
-
+    final len = model.predictions.length;
     if (model.predictions.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
       padding: const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
-      itemCount: model.predictions.length,
+      itemCount: len,
       itemExtent: 100,
       itemBuilder: (BuildContext context, int index) {
         model.showedPredictionAtIndex(index);
@@ -38,8 +38,8 @@ class _PredictionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final predictions = context.select((IndexModel m) => m.predictions);
-    final prediction = predictions[index];
+    final model = context.read<IndexModel>();
+    final prediction = model.predictions[index];
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 5),

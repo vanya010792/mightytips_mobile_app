@@ -10,13 +10,6 @@ import 'package:provider/provider.dart';
 
 class ScreenFactory {
   Widget makeIndex() {
-    // return ChangeNotifierProvider(
-    //   create: (_) => IndexModel(),
-    //   child: HeaderWidget(
-    //     screen: const IndexWidget(),
-    //     menuActivePage: MenuWidgetIndex.main,
-    //   ),
-    // );
     return HeaderWidget(
       screen: ChangeNotifierProvider(
         create: (_) => IndexModel(),

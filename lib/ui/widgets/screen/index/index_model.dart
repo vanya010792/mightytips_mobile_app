@@ -27,6 +27,7 @@ class IndexModel extends ChangeNotifier {
   late PredictionResponse _predictionsResponse;
   final _predictionRowData = <PredictionRowData>[];
   final _predictionRow = <PredictionRowData>[];
+
   late bool _isLoading;
   late int _page;
   late int _visibleCard;
@@ -46,28 +47,34 @@ class IndexModel extends ChangeNotifier {
     _loadNextPage();
   }
 
-  void _loadNextPage() {
+  Future<void> _loadNextPage() async {
     if(_isLoading) {
-      final int start = (_page - 1) * _cardOnPage;
-      final curPrediction = _predictionRowData.sublist(start, _visibleCard);
-      _predictionRow.addAll(curPrediction);
-      _page += 1;
-      _visibleCard += _cardOnPage;
-      _isLoading = false;
+      await _generateNextPage();
       notifyListeners();
     }
   }
 
+  Future<void> _generateNextPage() async {
+    final int start = (_page - 1) * _cardOnPage;
+    final curPrediction = _predictionRowData.sublist(start, _visibleCard);
+    _predictionRow.addAll(curPrediction);
+    _page += 1;
+    _visibleCard += _cardOnPage;
+    _isLoading = false;
+  }
+
   Future<void> _getPredictions() async {
     _predictionsResponse = await _predictionService.predictionList();
-    final List<List<PredictionRowData>> leagueList = _predictionsResponse.leagues
-        .map((e) => e.predictions.map(_makePredictionRowData).toList()).toList();
+    final List<List<PredictionRowData>> leagueList = _predictionsResponse
+        .leagues
+        .map((e) => e.predictions.map(_makePredictionRowData).toList())
+        .toList();
     var predictionList = <PredictionRowData>[];
-    for(var a = 0; a < leagueList.length; a++) {
+    for (var a = 0; a < leagueList.length; a++) {
       predictionList.addAll(leagueList[a]);
     }
-    for(var b = 0; b < predictionList.length; b++) {
-      if(predictionList[b].matchDate != 'Jan 01, 1970') {
+    for (var b = 0; b < predictionList.length; b++) {
+      if (predictionList[b].matchDate != 'Jan 01, 1970') {
         _predictionRowData.add(predictionList[b]);
       }
     }
